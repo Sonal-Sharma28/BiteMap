@@ -21,6 +21,24 @@ app.get("/places", (req, res) => {
 
 });
 
-app.listen(5000, () => {
+
+app.post("/places", (req, res) => {
+
+  const { name, location } = req.body;
+
+  const query = "INSERT INTO places (name, location) VALUES (?, ?)";
+
+  db.query(query, [name, location], (err, result) => {
+
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json({ message: "Place added successfully" });
+    }
+
+  });
+
+
+});app.listen(5000, () => {
   console.log("Server running on port 5000");
 });
