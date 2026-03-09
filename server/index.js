@@ -7,6 +7,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+/* GET ALL PLACES */
+
 app.get("/places", (req, res) => {
 
   const query = "SELECT * FROM places";
@@ -21,6 +23,8 @@ app.get("/places", (req, res) => {
 
 });
 
+
+/* ADD NEW PLACE */
 
 app.post("/places", (req, res) => {
 
@@ -38,7 +42,33 @@ app.post("/places", (req, res) => {
 
   });
 
+});
 
-});app.listen(5000, () => {
+
+/* SEARCH PLACES */
+
+app.get("/search", (req, res) => {
+
+  const searchQuery = req.query.q;
+
+  const query = `
+    SELECT * FROM places
+    WHERE name LIKE ? OR location LIKE ?
+  `;
+
+  db.query(query,[`%${searchQuery}%`,`%${searchQuery}%`], (err, result) => {
+
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.json(result);
+    }
+
+  });
+
+});
+
+
+app.listen(5000, () => {
   console.log("Server running on port 5000");
 });
